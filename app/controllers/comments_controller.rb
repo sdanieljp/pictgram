@@ -3,12 +3,14 @@ class CommentsController < ApplicationController
   end
   
   def new
-    @comment = Comment.new
-    @topic_id = params[:topic_id]
+    @topic = Topic.find(params[:topic_id])
+    @comment = Comment.new(topic_id: params[:topic_id])
   end
   
   def create
-    @comment = current_user.comments.new(comment_params)
+    @topic = Topic.find(params[:topic_id])
+    @comment = current_user.comments.new(comment: comment_params[:comment], topic_id: params[:topic_id])
+    binding.pry
     if @comment.save
       redirect_to topics_path, success: '投稿に成功しました'
     else
